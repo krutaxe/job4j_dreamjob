@@ -1,9 +1,6 @@
-package ru.job4j.dream.model;
+package ru.job4j.dreamjob.model;
 
-import javax.print.attribute.standard.DateTimeAtCompleted;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
 public class Post {
