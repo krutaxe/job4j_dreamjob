@@ -19,7 +19,7 @@ public class PostControl {
     }
 
     @GetMapping("/formAddPost")
-    public String addPost(Model model) {
+    public String addCandidate(Model model) {
         model.addAttribute("post", new Post(0, "Заполните поле",
                 "Описание", LocalDate.now()));
         return "addPost";
