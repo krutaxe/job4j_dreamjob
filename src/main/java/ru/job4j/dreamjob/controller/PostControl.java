@@ -3,7 +3,10 @@ package ru.job4j.dreamjob.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import ru.job4j.dreamjob.model.Post;
 import ru.job4j.dreamjob.store.PostStore;
+
+import java.time.LocalDate;
 
 @Controller
 public class PostControl {
@@ -13,5 +16,12 @@ public class PostControl {
     public String posts(Model model) {
         model.addAttribute("posts", postStore.findAll());
         return "posts";
+    }
+
+    @GetMapping("/formAddPost")
+    public String addPost(Model model) {
+        model.addAttribute("post", new Post(0, "Заполните поле",
+                "Описание", LocalDate.now()));
+        return "addPost";
     }
 }
