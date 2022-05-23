@@ -1,6 +1,8 @@
 package ru.job4j.dreamjob.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Objects;
 
 public class Post {
@@ -8,6 +10,8 @@ public class Post {
     private String name;
     private String description;
     private LocalDate created;
+
+    public Post() {}
 
     public Post(int id, String name, String description, LocalDate created) {
         this.id = id;
