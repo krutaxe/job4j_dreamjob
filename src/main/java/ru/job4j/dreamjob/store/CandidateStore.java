@@ -1,16 +1,17 @@
 package ru.job4j.dreamjob.store;
 
+import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.Candidate;
-import ru.job4j.dreamjob.model.Post;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.concurrent.atomic.AtomicInteger;
+@Repository
 public class CandidateStore {
-    private static final CandidateStore INST = new CandidateStore();
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
+    private final AtomicInteger ids = new AtomicInteger(3);
 
     public CandidateStore() {
         candidates.put(1, new Candidate(1, "Dima",
@@ -21,15 +22,12 @@ public class CandidateStore {
                 "Spring (Spring Boot, Spring JPA, Spring Cloud)", LocalDate.now()));
     }
 
-    public static CandidateStore instOf() {
-        return INST;
-    }
-
     public Collection<Candidate> findAll() {
         return candidates.values();
     }
 
     public void add(Candidate candidate) {
+        candidate.setId(ids.incrementAndGet());
         candidates.put(candidate.getId(), candidate);
     }
 
