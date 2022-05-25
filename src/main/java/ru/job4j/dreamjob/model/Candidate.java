@@ -5,14 +5,14 @@ import java.util.Objects;
 
 public class Candidate {
     private int id;
-    private String name;
-    private String desc;
-    private LocalDate created;
+    private final String name;
+    private final String description;
+    private final LocalDate created;
 
-    public Candidate(int id, String name, String desc, LocalDate created) {
+    public Candidate(int id, String name, String description, LocalDate created) {
         this.id = id;
         this.name = name;
-        this.desc = desc;
+        this.description = description;
         this.created = created;
     }
 
@@ -28,24 +28,12 @@ public class Candidate {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public String getDescription() {
+        return description;
     }
 
     public LocalDate getCreated() {
         return created;
-    }
-
-    public void setCreated(LocalDate created) {
-        this.created = created;
     }
 
     @Override
