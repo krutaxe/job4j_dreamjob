@@ -16,7 +16,7 @@ public class PostStore {
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final AtomicInteger ids = new AtomicInteger(3);
 
-    private PostStore() {
+    public PostStore() {
         posts.put(1, new Post(1, "Junior Java Job",
                 "SQL и принципы проектирования баз данных", LocalDate.now()));
         posts.put(2, new Post(2, "Middle Java Job",
