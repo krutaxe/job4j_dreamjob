@@ -46,6 +46,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Название Вакансии</th>
                 <th scope="col">Описание</th>
+                <th scope="col">Город</th>
                 <th scope="col">Дата создания</th>
             </tr>
             </thead>
@@ -65,6 +66,7 @@
         </span>
                 </td>
                 <td th:text="${post.description}"/>
+                <td th:text="${post.city.name}"/>
                 <td th:text="${post.created}"/>
             </tr>
             </tbody>
