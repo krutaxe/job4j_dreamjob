@@ -7,13 +7,12 @@ public class Candidate {
     private int id;
     private final String name;
     private final String description;
-    private final LocalDate created;
+    private final LocalDate created = LocalDate.now();
 
     public Candidate(int id, String name, String description, LocalDate created) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.created = created;
     }
 
     public int getId() {
