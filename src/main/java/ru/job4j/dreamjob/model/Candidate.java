@@ -9,10 +9,20 @@ public class Candidate {
     private final String description;
     private final LocalDate created = LocalDate.now();
 
+    private byte[] photo;
+
     public Candidate(int id, String name, String description, LocalDate created) {
         this.id = id;
         this.name = name;
         this.description = description;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
     }
 
     public int getId() {
