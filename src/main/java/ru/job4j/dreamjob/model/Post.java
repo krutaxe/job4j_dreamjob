@@ -2,22 +2,22 @@ package ru.job4j.dreamjob.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Post implements Serializable {
     private int id;
     private final String name;
     private final String description;
-    private final String created;
+    private final LocalDate created = LocalDate.now();
     private boolean visible;
     private City city;
 
-    public Post(int id, String name, String description, City city, String created) {
+    public Post(int id, String name, String description, City city, LocalDate created) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.city = city;
-        this.created = created;
     }
 
     public City getCity() {
@@ -44,7 +44,7 @@ public class Post implements Serializable {
         return description;
     }
 
-    public String getCreated() {
+    public LocalDate getCreated() {
         return created;
     }
 
