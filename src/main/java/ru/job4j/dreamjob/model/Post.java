@@ -8,11 +8,11 @@ public class Post implements Serializable {
     private int id;
     private final String name;
     private final String description;
-    private final LocalDate created;
+    private final String created;
     private boolean visible;
     private City city;
 
-    public Post(int id, String name, String description, City city, LocalDate created) {
+    public Post(int id, String name, String description, City city, String created) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -44,7 +44,7 @@ public class Post implements Serializable {
         return description;
     }
 
-    public LocalDate getCreated() {
+    public String getCreated() {
         return created;
     }
 
