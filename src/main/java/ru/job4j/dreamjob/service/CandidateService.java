@@ -3,20 +3,23 @@ package ru.job4j.dreamjob.service;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.dreamjob.model.Candidate;
+import ru.job4j.dreamjob.model.Post;
+import ru.job4j.dreamjob.store.CandidateDbStore;
 import ru.job4j.dreamjob.store.CandidateStore;
 
 import java.util.Collection;
+import java.util.List;
 
 @ThreadSafe
 @Service
 public class CandidateService {
-    private final CandidateStore store;
+    private final CandidateDbStore store;
 
-    public CandidateService(CandidateStore store) {
+    public CandidateService(CandidateDbStore store) {
         this.store = store;
     }
 
-    public Collection<Candidate> findAll() {
+    public List<Candidate> findAll() {
         return store.findAll();
     }
 
@@ -28,7 +31,7 @@ public class CandidateService {
         return store.findById(id);
     }
 
-    public Candidate update(Candidate candidate) {
-        return store.update(candidate);
+    public void update(Candidate candidate) {
+        store.update(candidate);
     }
 }
