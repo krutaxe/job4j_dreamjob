@@ -38,7 +38,7 @@ public class PostService {
         return store.findById(id);
     }
 
-    public Post update(Post post) {
-        return store.update(post);
+    public void update(Post post) {
+         store.update(post);
     }
 }

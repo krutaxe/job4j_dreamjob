@@ -2,10 +2,12 @@ package ru.job4j.dreamjob.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.stereotype.Repository;
+import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,10 @@ public class PostDBStore {
                 while (it.next()) {
                     posts.add(new Post(
                             it.getInt("id"),
-                            it.getString("name")));
+                            it.getString("name"),
+                            it.getString("description"),
+                            it.getObject("city", City.class),
+                            it.getObject("data", LocalDate.class)));
                 }
             }
         } catch (Exception e) {
@@ -35,7 +40,6 @@ public class PostDBStore {
         }
         return posts;
     }
-
 
     public Post add(Post post) {
         try (Connection cn = pool.getConnection();
@@ -55,8 +59,17 @@ public class PostDBStore {
         return post;
     }
 
-    private void update(Post post) {
-
+    public void update(Post post) {
+        try (Connection cn = pool.getConnection();
+        PreparedStatement ps = cn.prepareStatement(
+                "update post set name = ?, description = ?, city_id = ?, data = ? where id = ?")) {
+            ps.setString(1, post.getName());
+            ps.setString(2, post.getDescription());
+            ps.setObject(3, post.getCity());
+            ps.setObject(4, post.getCreated());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public Post findById(int id) {
@@ -68,7 +81,10 @@ public class PostDBStore {
                 if (it.next()) {
                     return new Post(
                             it.getInt("id"),
-                            it.getString("name"));
+                            it.getString("name"),
+                            it.getString("description"),
+                            it.getObject("city", City.class),
+                            it.getObject("data", LocalDate.class));
                 }
             }
         } catch (Exception e) {
