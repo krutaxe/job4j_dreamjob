@@ -18,6 +18,15 @@ public class CandidateDbStore {
     );
     private final BasicDataSource pool;
 
+    private final String findAllSql = "SELECT * FROM candidate";
+
+    private final String addSql = "INSERT INTO candidate(name, description, data, photo) "
+            + "VALUES (?, ?, ?, ?)";
+
+    private final String updateSql = "UPDATE candidate SET name = ?, description = ? WHERE id = ?";
+
+    private final String findByIdSql = "SELECT * FROM candidate WHERE id = ?";
+
     public CandidateDbStore(BasicDataSource pool) {
         this.pool = pool;
     }
@@ -25,7 +34,7 @@ public class CandidateDbStore {
     public List<Candidate> findAll() {
         List<Candidate> candidates = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post")
+             PreparedStatement ps =  cn.prepareStatement(findAllSql)
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
@@ -44,10 +53,13 @@ public class CandidateDbStore {
 
     public Candidate add(Candidate candidate) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO post(name) VALUES (?)",
+             PreparedStatement ps =  cn.prepareStatement(addSql,
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, candidate.getName());
+            ps.setString(2, candidate.getDescription());
+            ps.setObject(3, LocalDate.now());
+            ps.setBytes(4, candidate.getPhoto());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -63,10 +75,9 @@ public class CandidateDbStore {
     public void update(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "update post set name = ?, description = ?, data = ? where id = ?")) {
+                     updateSql)) {
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
-            ps.setObject(3, candidate.getCreated());
         } catch (Exception e) {
             LOG_CANDIDATE_DB.error("Error update", e);
         }
@@ -74,7 +85,7 @@ public class CandidateDbStore {
 
     public Candidate findById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post WHERE id = ?")
+             PreparedStatement ps =  cn.prepareStatement(findByIdSql)
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
