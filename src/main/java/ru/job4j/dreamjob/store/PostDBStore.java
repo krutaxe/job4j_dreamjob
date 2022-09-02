@@ -21,15 +21,16 @@ public class PostDBStore {
             PostDBStore.class.getName()
     );
 
-    private final BasicDataSource pool;
-    private final String findAllSql = "SELECT * FROM post";
+    private static final String FIND_ALL_SQL = "SELECT * FROM post";
 
-    private final String addSql = "INSERT INTO post(name) VALUES (?)";
+    private static final String ADD_SQL = "INSERT INTO post(name) VALUES (?)";
 
-    private final String updateSql = "UPDATE post SET name = ?, description = ?, "
+    private static final String UPDATE_SQL = "UPDATE post SET name = ?, description = ?, "
             + "city_id = ? WHERE id = ?";
 
-    private final String findByIdSql = "SELECT * FROM post WHERE id = ?";
+    private static final String FIND_BY_ID_SQL = "SELECT * FROM post WHERE id = ?";
+
+    private final BasicDataSource pool;
 
     public PostDBStore(BasicDataSource pool) {
         this.pool = pool;
@@ -38,7 +39,7 @@ public class PostDBStore {
     public List<Post> findAll() {
         List<Post> posts = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement(findAllSql)
+             PreparedStatement ps = cn.prepareStatement(FIND_ALL_SQL)
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
@@ -58,10 +59,14 @@ public class PostDBStore {
 
     public Post add(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement(addSql,
+             PreparedStatement ps = cn.prepareStatement(ADD_SQL,
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, post.getName());
+            ps.setString(2, post.getDescription());
+            ps.setObject(3, LocalDate.now());
+            ps.setBoolean(4, post.isVisible());
+            ps.setObject(5, post.getCity());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -76,10 +81,10 @@ public class PostDBStore {
 
     public void update(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement(updateSql)) {
+             PreparedStatement ps = cn.prepareStatement(UPDATE_SQL)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
-            ps.setObject(3, post.getCity());
+            ps.setObject(3, post.getCity().getId());
         } catch (Exception e) {
             LOG_POST_DB.error("Error update", e);
         }
@@ -87,7 +92,7 @@ public class PostDBStore {
 
     public Post findById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement(findByIdSql)
+             PreparedStatement ps = cn.prepareStatement(FIND_BY_ID_SQL)
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
