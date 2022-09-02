@@ -6,3 +6,12 @@ create TABLE post (
 	data TEXT,
 	city_id INT
 );
+
+
+CREATE TABLE candidate (
+	id SERIAL PRIMARY KEY,
+	name TEXT,
+	description TEXT,
+	data TEXT,
+	photo integer[]
+);

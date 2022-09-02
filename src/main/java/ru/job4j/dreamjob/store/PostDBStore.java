@@ -1,9 +1,12 @@
 package ru.job4j.dreamjob.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +17,19 @@ import java.util.List;
 @Repository
 public class PostDBStore {
 
+    private static final Logger LOG_POST_DB = LoggerFactory.getLogger(
+            PostDBStore.class.getName()
+    );
+
     private final BasicDataSource pool;
+    private final String findAllSql = "SELECT * FROM post";
+
+    private final String addSql = "INSERT INTO post(name) VALUES (?)";
+
+    private final String updateSql = "UPDATE post SET name = ?, description = ?, "
+            + "city_id = ? WHERE id = ?";
+
+    private final String findByIdSql = "SELECT * FROM post WHERE id = ?";
 
     public PostDBStore(BasicDataSource pool) {
         this.pool = pool;
@@ -23,7 +38,7 @@ public class PostDBStore {
     public List<Post> findAll() {
         List<Post> posts = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post")
+             PreparedStatement ps = cn.prepareStatement(findAllSql)
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
@@ -36,14 +51,14 @@ public class PostDBStore {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG_POST_DB.error("Error findAll", e);
         }
         return posts;
     }
 
     public Post add(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO post(name) VALUES (?)",
+             PreparedStatement ps = cn.prepareStatement(addSql,
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, post.getName());
@@ -54,27 +69,25 @@ public class PostDBStore {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG_POST_DB.error("Error add", e);
         }
         return post;
     }
 
     public void update(Post post) {
         try (Connection cn = pool.getConnection();
-        PreparedStatement ps = cn.prepareStatement(
-                "update post set name = ?, description = ?, city_id = ?, data = ? where id = ?")) {
+             PreparedStatement ps = cn.prepareStatement(updateSql)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
             ps.setObject(3, post.getCity());
-            ps.setObject(4, post.getCreated());
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG_POST_DB.error("Error update", e);
         }
     }
 
     public Post findById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post WHERE id = ?")
+             PreparedStatement ps = cn.prepareStatement(findByIdSql)
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
@@ -88,7 +101,7 @@ public class PostDBStore {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG_POST_DB.error("Error findById", e);
         }
         return null;
     }
