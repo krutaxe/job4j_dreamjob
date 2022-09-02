@@ -16,16 +16,18 @@ public class CandidateDbStore {
     private static final Logger LOG_CANDIDATE_DB = LoggerFactory.getLogger(
             Candidate.class.getName()
     );
-    private final BasicDataSource pool;
 
-    private final String findAllSql = "SELECT * FROM candidate";
+    private static final String FIND_ALL_SQL = "SELECT * FROM candidate";
 
-    private final String addSql = "INSERT INTO candidate(name, description, data, photo) "
+    private static final String ADD_SQL = "INSERT INTO candidate(name, description, data, photo) "
             + "VALUES (?, ?, ?, ?)";
 
-    private final String updateSql = "UPDATE candidate SET name = ?, description = ? WHERE id = ?";
+    private static final String UPDATE_SQL = "UPDATE candidate SET name = ?, "
+            + "description = ? WHERE id = ?";
 
-    private final String findByIdSql = "SELECT * FROM candidate WHERE id = ?";
+    private static final String FIND_BY_ID_SQL = "SELECT * FROM candidate WHERE id = ?";
+
+    private final BasicDataSource pool;
 
     public CandidateDbStore(BasicDataSource pool) {
         this.pool = pool;
@@ -34,7 +36,7 @@ public class CandidateDbStore {
     public List<Candidate> findAll() {
         List<Candidate> candidates = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement(findAllSql)
+             PreparedStatement ps =  cn.prepareStatement(FIND_ALL_SQL)
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
@@ -53,7 +55,7 @@ public class CandidateDbStore {
 
     public Candidate add(Candidate candidate) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement(addSql,
+             PreparedStatement ps =  cn.prepareStatement(ADD_SQL,
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, candidate.getName());
@@ -74,8 +76,7 @@ public class CandidateDbStore {
 
     public void update(Candidate candidate) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement(
-                     updateSql)) {
+             PreparedStatement ps = cn.prepareStatement(UPDATE_SQL)) {
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
         } catch (Exception e) {
@@ -85,7 +86,7 @@ public class CandidateDbStore {
 
     public Candidate findById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement(findByIdSql)
+             PreparedStatement ps =  cn.prepareStatement(FIND_BY_ID_SQL)
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
