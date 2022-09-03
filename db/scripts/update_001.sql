@@ -1,17 +1,16 @@
-create TABLE post (
-    id SERIAL PRIMARY KEY,
-    name TEXT,
-    description TEXT,
-	visibl boolean,
-	data TEXT,
-	city_id INT
+CREATE TABLE IF NOT EXISTS post (
+   id SERIAL PRIMARY KEY,
+   name text,
+   description text,
+   visible boolean,
+   created date,
+   city_id INT
 );
 
-
-CREATE TABLE candidate (
-	id SERIAL PRIMARY KEY,
-	name TEXT,
-	description TEXT,
-	data TEXT,
-	photo integer[]
+CREATE TABLE IF NOT EXISTS candidate (
+   id SERIAL PRIMARY KEY,
+   name text,
+   description text,
+   photo bytea,
+   created timestamp
 );
