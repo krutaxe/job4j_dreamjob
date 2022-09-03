@@ -23,11 +23,11 @@ public class CandidateDbStore {
             """;
 
     private static final String ADD_SQL = """
-            INSERT INTO candidate(name, description, created, photo) VALUES (?, ?, ?, ?)
+            INSERT INTO candidate(name, description, created) VALUES (?, ?, ?)
             """;
 
     private static final String UPDATE_SQL = """
-            UPDATE candidate SET name = ?, description = ?, created = ?, photo = ? WHERE id = ?
+            UPDATE candidate SET name = ?, description = ?, created = ? WHERE id = ?
             """;
 
     private static final String FIND_BY_ID_SQL = """
@@ -51,8 +51,7 @@ public class CandidateDbStore {
                             it.getInt("id"),
                             it.getString("name"),
                             it.getString("description"),
-                            it.getDate("created").toLocalDate(),
-                            it.getBytes("photo")));
+                            it.getDate("created").toLocalDate()));
                 }
             }
         } catch (Exception e) {
@@ -69,7 +68,6 @@ public class CandidateDbStore {
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
             ps.setDate(3, Date.valueOf(candidate.getCreated()));
-            ps.setBytes(4, candidate.getPhoto());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -89,7 +87,8 @@ public class CandidateDbStore {
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
             ps.setDate(3, Date.valueOf(candidate.getCreated()));
-            ps.setBytes(4, candidate.getPhoto());
+            ps.setInt(4, candidate.getId());
+            ps.executeUpdate();
         } catch (Exception e) {
             LOG_CANDIDATE_DB.error("Error update", e);
         }
@@ -106,8 +105,7 @@ public class CandidateDbStore {
                             it.getInt("id"),
                             it.getString("name"),
                             it.getString("description"),
-                            it.getDate("created").toLocalDate(),
-                            it.getBytes("photo"));
+                            it.getDate("created").toLocalDate());
                 }
             }
         } catch (Exception e) {
