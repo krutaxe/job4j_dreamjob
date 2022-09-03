@@ -4,10 +4,11 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.job4j.dreamjob.model.Candidate;
+
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,15 +18,21 @@ public class CandidateDbStore {
             Candidate.class.getName()
     );
 
-    private static final String FIND_ALL_SQL = "SELECT * FROM candidate";
+    private static final String FIND_ALL_SQL = """
+            SELECT * FROM candidate
+            """;
 
-    private static final String ADD_SQL = "INSERT INTO candidate(name, description, data, photo) "
-            + "VALUES (?, ?, ?, ?)";
+    private static final String ADD_SQL = """
+            INSERT INTO candidate(name, description, created, photo) VALUES (?, ?, ?, ?)
+            """;
 
-    private static final String UPDATE_SQL = "UPDATE candidate SET name = ?, "
-            + "description = ? WHERE id = ?";
+    private static final String UPDATE_SQL = """
+            UPDATE candidate SET name = ?, description = ?, created = ?, photo = ? WHERE id = ?
+            """;
 
-    private static final String FIND_BY_ID_SQL = "SELECT * FROM candidate WHERE id = ?";
+    private static final String FIND_BY_ID_SQL = """
+            SELECT * FROM candidate WHERE id = ?
+            """;
 
     private final BasicDataSource pool;
 
@@ -36,7 +43,7 @@ public class CandidateDbStore {
     public List<Candidate> findAll() {
         List<Candidate> candidates = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement(FIND_ALL_SQL)
+             PreparedStatement ps = cn.prepareStatement(FIND_ALL_SQL)
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
@@ -44,7 +51,8 @@ public class CandidateDbStore {
                             it.getInt("id"),
                             it.getString("name"),
                             it.getString("description"),
-                            it.getObject("data", LocalDate.class)));
+                            it.getDate("created").toLocalDate(),
+                            it.getBytes("photo")));
                 }
             }
         } catch (Exception e) {
@@ -55,12 +63,12 @@ public class CandidateDbStore {
 
     public Candidate add(Candidate candidate) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement(ADD_SQL,
+             PreparedStatement ps = cn.prepareStatement(ADD_SQL,
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
-            ps.setObject(3, LocalDate.now());
+            ps.setDate(3, Date.valueOf(candidate.getCreated()));
             ps.setBytes(4, candidate.getPhoto());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
@@ -76,9 +84,12 @@ public class CandidateDbStore {
 
     public void update(Candidate candidate) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement(UPDATE_SQL)) {
+             PreparedStatement ps = cn.prepareStatement(UPDATE_SQL,
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
+            ps.setDate(3, Date.valueOf(candidate.getCreated()));
+            ps.setBytes(4, candidate.getPhoto());
         } catch (Exception e) {
             LOG_CANDIDATE_DB.error("Error update", e);
         }
@@ -86,7 +97,7 @@ public class CandidateDbStore {
 
     public Candidate findById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement(FIND_BY_ID_SQL)
+             PreparedStatement ps = cn.prepareStatement(FIND_BY_ID_SQL)
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
@@ -95,7 +106,8 @@ public class CandidateDbStore {
                             it.getInt("id"),
                             it.getString("name"),
                             it.getString("description"),
-                            it.getObject("data", LocalDate.class));
+                            it.getDate("created").toLocalDate(),
+                            it.getBytes("photo"));
                 }
             }
         } catch (Exception e) {

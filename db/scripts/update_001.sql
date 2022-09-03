@@ -11,6 +11,6 @@ CREATE TABLE IF NOT EXISTS candidate (
    id SERIAL PRIMARY KEY,
    name text,
    description text,
-   photo bytea,
-   created timestamp
+   created date,
+   photo bytea
 );

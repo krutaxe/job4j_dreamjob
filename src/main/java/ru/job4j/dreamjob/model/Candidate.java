@@ -5,16 +5,20 @@ import java.util.Objects;
 
 public class Candidate {
     private int id;
-    private final String name;
-    private final String description;
-    private final LocalDate created = LocalDate.now();
-
+    private String name;
+    private String description;
+    private LocalDate created;
     private byte[] photo;
 
-    public Candidate(int id, String name, String description, LocalDate created) {
+    public Candidate() {
+    }
+
+    public Candidate(int id, String name, String description, LocalDate created, byte[] photo) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.created = created;
+        this.photo = photo;
     }
 
     public byte[] getPhoto() {

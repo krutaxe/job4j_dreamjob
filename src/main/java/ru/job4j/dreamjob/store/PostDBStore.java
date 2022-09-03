@@ -84,7 +84,8 @@ public class PostDBStore {
 
     public void update(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement(UPDATE_SQL)) {
+             PreparedStatement ps = cn.prepareStatement(UPDATE_SQL,
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
             ps.setBoolean(3, post.isVisible());

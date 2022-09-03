@@ -17,12 +17,7 @@ public class CandidateStore {
     private final AtomicInteger ids = new AtomicInteger(3);
 
     public CandidateStore() {
-        candidates.put(1, new Candidate(1, "Dima",
-                "Java Core, SQL", LocalDate.now()));
-        candidates.put(2, new Candidate(2, "Misha",
-                "JavaScript, Angular", LocalDate.now()));
-        candidates.put(3, new Candidate(3, "Alex",
-                "Spring (Spring Boot, Spring JPA, Spring Cloud)", LocalDate.now()));
+
     }
 
     public Collection<Candidate> findAll() {
