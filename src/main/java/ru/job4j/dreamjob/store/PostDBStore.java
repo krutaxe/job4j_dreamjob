@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.Post;
 import ru.job4j.dreamjob.service.CityService;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
