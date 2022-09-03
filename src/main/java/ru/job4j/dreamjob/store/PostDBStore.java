@@ -52,7 +52,6 @@ public class PostDBStore {
                             it.getString("description"),
                             it.getBoolean("visible"),
                             new CityService().findById(it.getInt("city_id"))));
-
                 }
             }
         } catch (Exception e) {
