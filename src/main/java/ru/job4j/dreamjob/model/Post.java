@@ -12,16 +12,34 @@ public class Post implements Serializable {
     private boolean visible;
     private City city;
 
-    public Post(int id, String name, String description, City city, LocalDate created) {
+    public Post(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
+    }
+
+    public Post(int id, String name, String description, boolean visible, City city) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.visible = visible;
         this.city = city;
-        this.created = created;
     }
 
     public City getCity() {
         return city;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCreated(LocalDate created) {
+        this.created = created;
     }
 
     public void setCity(City city) {
@@ -71,5 +89,17 @@ public class Post implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Post{"
+              +  "id=" + id
+              +  ", name='" + name + '\''
+              +  ", description='" + description + '\''
+              +  ", created=" + created
+              +  ", visible=" + visible
+              +  ", city=" + city
+              +  '}';
     }
 }

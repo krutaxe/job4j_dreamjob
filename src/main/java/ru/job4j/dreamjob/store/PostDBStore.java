@@ -4,13 +4,10 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
+import ru.job4j.dreamjob.service.CityService;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.time.LocalDate;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,14 +18,21 @@ public class PostDBStore {
             PostDBStore.class.getName()
     );
 
-    private static final String FIND_ALL_SQL = "SELECT * FROM post";
+    private static final String FIND_ALL_SQL = """
+            SELECT * FROM post
+            """;
 
-    private static final String ADD_SQL = "INSERT INTO post(name) VALUES (?)";
+    private static final String ADD_SQL = """
+            INSERT INTO post(name, description, visible, city_id) VALUES (?, ?, ?, ?)
+            """;
 
-    private static final String UPDATE_SQL = "UPDATE post SET name = ?, description = ?, "
-            + "city_id = ? WHERE id = ?";
+    private static final String UPDATE_SQL = """
+            UPDATE post SET name = ?, description = ?, visible = ?, city_id = ? WHERE id = ?
+            """;
 
-    private static final String FIND_BY_ID_SQL = "SELECT * FROM post WHERE id = ?";
+    private static final String FIND_BY_ID_SQL = """
+            SELECT * FROM post WHERE id = ?
+            """;
 
     private final BasicDataSource pool;
 
@@ -47,8 +51,9 @@ public class PostDBStore {
                             it.getInt("id"),
                             it.getString("name"),
                             it.getString("description"),
-                            it.getObject("city", City.class),
-                            it.getObject("data", LocalDate.class)));
+                            it.getBoolean("visible"),
+                            new CityService().findById(it.getInt("city_id"))));
+
                 }
             }
         } catch (Exception e) {
@@ -64,9 +69,8 @@ public class PostDBStore {
         ) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
-            ps.setObject(3, LocalDate.now());
-            ps.setBoolean(4, post.isVisible());
-            ps.setObject(5, post.getCity());
+            ps.setBoolean(3, post.isVisible());
+            ps.setInt(4, post.getCity().getId());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -76,6 +80,7 @@ public class PostDBStore {
         } catch (Exception e) {
             LOG_POST_DB.error("Error add", e);
         }
+        System.out.println(post);
         return post;
     }
 
@@ -84,7 +89,8 @@ public class PostDBStore {
              PreparedStatement ps = cn.prepareStatement(UPDATE_SQL)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
-            ps.setObject(3, post.getCity().getId());
+            ps.setBoolean(3, post.isVisible());
+            ps.setInt(4, post.getCity().getId());
         } catch (Exception e) {
             LOG_POST_DB.error("Error update", e);
         }
@@ -101,8 +107,8 @@ public class PostDBStore {
                             it.getInt("id"),
                             it.getString("name"),
                             it.getString("description"),
-                            it.getObject("city", City.class),
-                            it.getObject("data", LocalDate.class));
+                            it.getBoolean("visible"),
+                            new CityService().findById(it.getInt("city_id")));
                 }
             }
         } catch (Exception e) {
