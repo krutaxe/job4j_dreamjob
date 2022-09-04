@@ -4,8 +4,9 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
-import ru.job4j.dreamjob.service.CityService;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class PostDBStore {
                             it.getString("name"),
                             it.getString("description"),
                             it.getBoolean("visible"),
-                            new CityService().findById(it.getInt("city_id"))));
+                            new City(it.getInt("city_id"), it.getString("city_id"))));
                 }
             }
         } catch (Exception e) {
@@ -109,7 +110,7 @@ public class PostDBStore {
                             it.getString("name"),
                             it.getString("description"),
                             it.getBoolean("visible"),
-                            new CityService().findById(it.getInt("city_id")));
+                            new City(it.getInt("city_id"), it.getString("city_id")));
                 }
             }
         } catch (Exception e) {
