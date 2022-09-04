@@ -79,7 +79,6 @@ public class PostDBStore {
         } catch (Exception e) {
             LOG_POST_DB.error("Error add", e);
         }
-        System.out.println(post);
         return post;
     }
 
