@@ -4,10 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.job4j.dreamjob.model.City;
-import ru.job4j.dreamjob.model.Post;
 import ru.job4j.dreamjob.model.User;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,6 +32,7 @@ public class UserDBStore {
     }
 
     public Optional<User> add(User user) {
+        Optional<User> rsl;
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(ADD_SQL,
                      PreparedStatement.RETURN_GENERATED_KEYS)
@@ -48,10 +46,12 @@ public class UserDBStore {
                     user.setId(id.getInt(1));
                 }
             }
+            rsl = Optional.of(user);
         } catch (Exception e) {
             LOG_USER_DB.error("Error add", e);
+            rsl = Optional.empty();
         }
-        return Optional.ofNullable(user);
+        return rsl;
     }
 
     public User findById(int id) {
