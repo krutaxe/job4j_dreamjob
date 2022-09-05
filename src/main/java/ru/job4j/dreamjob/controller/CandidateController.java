@@ -13,7 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import java.io.IOException;
-import java.time.LocalDate;
+
 @ThreadSafe
 @Controller
 public class CandidateController {

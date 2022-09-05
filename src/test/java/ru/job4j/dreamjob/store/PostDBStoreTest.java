@@ -3,14 +3,15 @@ package ru.job4j.dreamjob.store;
 import org.junit.jupiter.api.Test;
 import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
+import ru.job4j.dreamjob.Main;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PostDBStoreTest {
+class PostDbStoreTest {
 
     @Test
     public void whenCreatePostGetName() {
-        PostDBStore store = new PostDBStore(new Main().loadPool());
+        PostDbStore store = new PostDbStore(new Main().loadPool());
         Post post = new Post(0, "Java job", "Super job",
                 true, new City());
         store.add(post);
@@ -20,7 +21,7 @@ class PostDBStoreTest {
 
     @Test
     public void whenCreatePostGetDesc() {
-        PostDBStore store = new PostDBStore(new Main().loadPool());
+        PostDbStore store = new PostDbStore(new Main().loadPool());
         Post post1 = new Post(0, "Java job", "Super job",
                 true, new City());
         Post post2 = new Post(0, "Java job", "Good job",
@@ -33,7 +34,7 @@ class PostDBStoreTest {
 
     @Test
     public void whenUpdatePostDesc() {
-        PostDBStore store = new PostDBStore(new Main().loadPool());
+        PostDbStore store = new PostDbStore(new Main().loadPool());
         Post post1 = new Post(1, "Java job", "Super job",
                 true, new City());
         Post post2 = new Post(2, "PHP job", "Good job",

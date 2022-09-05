@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class PostDBStore {
+public class PostDbStore {
 
     private static final Logger LOG_POST_DB = LoggerFactory.getLogger(
-            PostDBStore.class.getName()
+            PostDbStore.class.getName()
     );
 
     private static final String FIND_ALL_SQL = """
@@ -36,7 +36,7 @@ public class PostDBStore {
 
     private final BasicDataSource pool;
 
-    public PostDBStore(BasicDataSource pool) {
+    public PostDbStore(BasicDataSource pool) {
         this.pool = pool;
     }
 

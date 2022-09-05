@@ -11,8 +11,6 @@ import ru.job4j.dreamjob.model.Post;
 import ru.job4j.dreamjob.service.CityService;
 import ru.job4j.dreamjob.service.PostService;
 
-import java.time.LocalDate;
-
 @ThreadSafe
 @Controller
 public class PostController {

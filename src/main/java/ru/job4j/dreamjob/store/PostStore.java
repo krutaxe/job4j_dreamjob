@@ -5,8 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

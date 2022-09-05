@@ -1,5 +1,6 @@
 package ru.job4j.dreamjob.store;
 
+import net.jcip.annotations.ThreadSafe;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import java.sql.ResultSet;
 import java.util.Optional;
 
 @Repository
+@ThreadSafe
 public class UserDBStore {
 
     private static final Logger LOG_USER_DB = LoggerFactory.getLogger(
