@@ -1,8 +1,8 @@
 package ru.job4j.dreamjob.store;
 
 import org.junit.jupiter.api.Test;
-import ru.job4j.dreamjob.model.Candidate;
 import ru.job4j.dreamjob.Main;
+import ru.job4j.dreamjob.model.Candidate;
 
 import java.time.LocalDate;
 

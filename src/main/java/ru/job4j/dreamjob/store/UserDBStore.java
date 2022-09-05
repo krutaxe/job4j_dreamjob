@@ -6,9 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.User;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,6 +26,10 @@ public class UserDBStore {
             INSERT INTO users (name, email, password) VALUES (?, ?, ?)
             """;
 
+    private static final String FIND_ALL_SQL = """
+            SELECT * FROM users
+            """;
+
     private static final String FIND_BY_ID_SQL = """
             SELECT * FROM users WHERE id = ?
             """;
@@ -31,6 +38,26 @@ public class UserDBStore {
 
     public UserDBStore(BasicDataSource pool) {
         this.pool = pool;
+    }
+
+    public List<User> findAll() {
+        List<User> users = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement(FIND_ALL_SQL)
+        ) {
+           try (ResultSet it = ps.executeQuery()) {
+               while (it.next()) {
+                   users.add(new User(
+                           it.getInt("id"),
+                           it.getString("name"),
+                           it.getString("email"),
+                           it.getString("password")));
+               }
+           }
+        } catch (Exception e) {
+            LOG_USER_DB.error("Error findAll");
+        }
+        return users;
     }
 
     public Optional<User> add(User user) {

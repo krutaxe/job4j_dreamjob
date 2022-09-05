@@ -8,6 +8,7 @@ import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +20,11 @@ public class PostDbStore {
     );
 
     private static final String FIND_ALL_SQL = """
-            SELECT * FROM post
+            SELECT * FROM post ORDER BY id
             """;
 
     private static final String ADD_SQL = """
-            INSERT INTO post(name, description, visible, city_id) VALUES (?, ?, ?, ?)
+            INSERT INTO post(name, description, visible, city_id, created) VALUES (?, ?, ?, ?, ?)
             """;
 
     private static final String UPDATE_SQL = """
@@ -70,6 +71,7 @@ public class PostDbStore {
             ps.setString(2, post.getDescription());
             ps.setBoolean(3, post.isVisible());
             ps.setInt(4, post.getCity().getId());
+            ps.setDate(5, Date.valueOf(LocalDate.now()));
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
