@@ -34,10 +34,36 @@ public class UserDBStore {
             SELECT * FROM users WHERE id = ?
             """;
 
+    private static final String FIND_BY_EMAIL_PWD = """
+            SELECT * FROM users WHERE email = ? and password = ?
+            """;
+
     private final BasicDataSource pool;
 
     public UserDBStore(BasicDataSource pool) {
         this.pool = pool;
+    }
+
+    public User findUserByEmailAndPwd(String email, String pwd) {
+        User user = null;
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement(FIND_BY_EMAIL_PWD)
+        ) {
+            ps.setString(1, email);
+            ps.setString(2, pwd);
+            try (ResultSet it = ps.executeQuery()) {
+                if (it.next()) {
+                     user = new User(
+                            it.getInt("id"),
+                            it.getString("name"),
+                            it.getString("email"),
+                            it.getString("password"));
+                }
+            }
+        } catch (Exception e) {
+            LOG_USER_DB.error("Error findByEmailAndPwd", e);
+        }
+        return user;
     }
 
     public List<User> findAll() {
@@ -45,17 +71,17 @@ public class UserDBStore {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(FIND_ALL_SQL)
         ) {
-           try (ResultSet it = ps.executeQuery()) {
-               while (it.next()) {
-                   users.add(new User(
-                           it.getInt("id"),
-                           it.getString("name"),
-                           it.getString("email"),
-                           it.getString("password")));
-               }
-           }
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    users.add(new User(
+                            it.getInt("id"),
+                            it.getString("name"),
+                            it.getString("email"),
+                            it.getString("password")));
+                }
+            }
         } catch (Exception e) {
-            LOG_USER_DB.error("Error findAll");
+            LOG_USER_DB.error("Error findAll", e);
         }
         return users;
     }
