@@ -27,7 +27,7 @@ public class UserDBStore {
             """;
 
     private static final String FIND_ALL_SQL = """
-            SELECT * FROM users
+            SELECT * FROM users ORDER BY id
             """;
 
     private static final String FIND_BY_ID_SQL = """
@@ -44,8 +44,9 @@ public class UserDBStore {
         this.pool = pool;
     }
 
-    public User findUserByEmailAndPwd(String email, String pwd) {
-        User user = null;
+    public Optional<User> findUserByEmailAndPwd(String email, String pwd) {
+        User user = new User();
+        Optional<User> rsl = Optional.empty();
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(FIND_BY_EMAIL_PWD)
         ) {
@@ -60,10 +61,13 @@ public class UserDBStore {
                             it.getString("password"));
                 }
             }
+            if (!user.getName().isEmpty()) {
+                rsl = Optional.of(user);
+            }
         } catch (Exception e) {
             LOG_USER_DB.error("Error findByEmailAndPwd", e);
         }
-        return user;
+        return rsl;
     }
 
     public List<User> findAll() {

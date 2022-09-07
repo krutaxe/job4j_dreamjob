@@ -30,6 +30,6 @@ public class UserService {
     }
 
     public Optional<User> findUserByEmailAndPwd(String email, String pwd) {
-        return Optional.of(userDBStore.findUserByEmailAndPwd(email, pwd));
+        return userDBStore.findUserByEmailAndPwd(email, pwd);
     }
 }
