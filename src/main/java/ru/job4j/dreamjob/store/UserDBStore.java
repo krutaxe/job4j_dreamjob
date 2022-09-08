@@ -45,7 +45,6 @@ public class UserDBStore {
     }
 
     public Optional<User> findUserByEmailAndPwd(String email, String pwd) {
-        User user = new User();
         Optional<User> rsl = Optional.empty();
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(FIND_BY_EMAIL_PWD)
@@ -54,15 +53,12 @@ public class UserDBStore {
             ps.setString(2, pwd);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                     user = new User(
+                    rsl = Optional.of(new User(
                             it.getInt("id"),
                             it.getString("name"),
                             it.getString("email"),
-                            it.getString("password"));
+                            it.getString("password")));
                 }
-            }
-            if (!user.getName().isEmpty()) {
-                rsl = Optional.of(user);
             }
         } catch (Exception e) {
             LOG_USER_DB.error("Error findByEmailAndPwd", e);
