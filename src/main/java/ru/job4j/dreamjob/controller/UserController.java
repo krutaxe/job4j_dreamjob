@@ -39,7 +39,7 @@ public class UserController {
             model.addAttribute("message", "Пользователь с такой почтой уже существует");
             return "redirect:/fail";
         }
-        return "redirect:/users";
+        return "redirect:/success";
     }
 
     @GetMapping("/users")
@@ -52,6 +52,11 @@ public class UserController {
     @GetMapping("/fail")
     public String fail() {
         return "fail";
+    }
+
+    @GetMapping("/success")
+    public String success() {
+        return "success";
     }
 
     @PostMapping("/formAddUser")
