@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.dreamjob.model.User;
 import ru.job4j.dreamjob.service.UserService;
+import ru.job4j.dreamjob.util.SessionHttp;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,12 +27,7 @@ public class UserController {
 
     @GetMapping("/formAddUser")
     public String addUser(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
-        model.addAttribute("userSession", user);
+        SessionHttp.getSessionUser(model, session);
         model.addAttribute("user", userService.findAll());
         return "addUser";
     }
@@ -48,12 +44,7 @@ public class UserController {
 
     @GetMapping("/users")
     public String posts(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
-        model.addAttribute("user", user);
+        SessionHttp.getSessionUser(model, session);
         model.addAttribute("users", userService.findAll());
         return "users";
     }
@@ -65,12 +56,7 @@ public class UserController {
 
     @PostMapping("/formAddUser")
     public String returnAddUser(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
-        model.addAttribute("userSession", user);
+        SessionHttp.getSessionUser(model, session);
         model.addAttribute("user", userService.findAll());
         return "addUser";
     }
@@ -78,12 +64,7 @@ public class UserController {
     @GetMapping("/loginPage")
     public String loginPage(Model model, @RequestParam(
             name = "fail", required = false) Boolean fail, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
-        model.addAttribute("user", user);
+        SessionHttp.getSessionUser(model, session);
         model.addAttribute("fail", fail != null);
         return "login";
     }
