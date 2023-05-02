@@ -37,7 +37,7 @@ mvn spring-boot:run
 
 Перейти по ссылке http://localhost:8080/posts
 
-![List of posts](img/job1.JPG)
+![List of posts](img/job1.jpg)
 
-![List of candidates](img/job2.JPG)
+![List of candidates](img/job2.jpg)
 
