@@ -14,11 +14,12 @@ public class Candidate {
     public Candidate() {
     }
 
-    public Candidate(int id, String name, String description, LocalDate created) {
+    public Candidate(int id, String name, String description, LocalDate created, byte[] photo) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.created = created;
+        this.photo = photo;
     }
 
     public void setName(String name) {
