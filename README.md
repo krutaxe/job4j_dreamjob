@@ -41,3 +41,9 @@ mvn spring-boot:run
 
 ![List of candidates](img/job2.jpg)
 
+## Контакты
+При возникновении вопросов, замечаний или предложений, прошу писать мне по указанным ниже контактам:
+
+[![alt-text](https://img.shields.io/badge/-telegram-grey?style=flat&logo=telegram&logoColor=white)](https://t.me/krutaxe)&nbsp;&nbsp;
+[![alt-text](https://img.shields.io/badge/@%20email-005FED?style=flat&logo=mail&logoColor=white)](mailto:krutaxe@mail.ru)&nbsp;&nbsp;
+
